@@ -37,15 +37,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 @SpringBootApplication
 @RestController
 @EnableJms
-public class MqspringApplication {
+public class AppProducer {
 	
-	static Logger logger = Logger.getLogger(MqspringApplication.class);
+	static Logger logger = Logger.getLogger(AppProducer.class);
 	
 	@Autowired
     private JmsTemplate jmsTemplate;
 
 	public static void main(String[] args) {
-		SpringApplication.run(MqspringApplication.class, args);
+		SpringApplication.run(AppProducer.class, args);
 //		ConfigurableApplicationContext context = SpringApplication.run(MqspringApplication.class, args);
 //		JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
 	}

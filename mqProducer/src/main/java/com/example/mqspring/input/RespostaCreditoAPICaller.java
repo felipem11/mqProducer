@@ -1,6 +1,9 @@
 package com.example.mqspring.input;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +20,8 @@ public class RespostaCreditoAPICaller {
 	private String nomeDecisao;
 	private String documentosSolicitados;
 	
-//	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS")
+	//@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime dataHoraDecisao;
-	private LocalDateTime validadeDecisao;
+	private LocalDate validadeDecisao;
 
 }
