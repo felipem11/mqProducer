@@ -1,4 +1,4 @@
-package com.example.mqspring.input;
+package com.felipe.mq.input;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class RespostaCreditoAPICaller {
 
+	private String idSimulacao;
 	private String codigoDecisao;
 	private String nomeDecisao;
 	private String documentosSolicitados;

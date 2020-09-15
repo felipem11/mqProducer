@@ -1,4 +1,4 @@
-package com.example.mqspring;
+package com.felipe.mq;
 
 import lombok.Getter;
 import lombok.Setter;

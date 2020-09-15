@@ -1,18 +1,18 @@
-		package com.example.mqspring;
+		package com.felipe.mq;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-import org.apache.log4j.Logger;
+		import com.felipe.mq.input.RespostaCreditoAPICaller;
+		import com.felipe.mq.input.RespostaCreditoAPIResponse;
+		import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+		import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+		import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+		import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.annotation.EnableJms;
@@ -23,18 +23,13 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
-import com.example.mqspring.input.RespostaCreditoAPICaller;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javax.jms.*;
+		import java.util.UUID;
 
-@SpringBootApplication
+		@SpringBootApplication
 @RestController
 @EnableJms
 public class AppProducer {
@@ -50,6 +45,18 @@ public class AppProducer {
 //		JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
 	}
 	
+	@PutMapping("teste/{id}")
+//	@ResponseStatus(HttpStatus.NOT_FOUND)
+	RespostaCreditoAPIResponse send(@PathVariable String id,
+//			@RequestBody RespostaCreditoAPICaller respostaCreditoAPICaller) throws JsonProcessingException{
+                                    @RequestBody String respostaCreditoAPICaller) throws JsonProcessingException{
+		System.out.println("Teste ID: " + id	);
+		System.out.println("Teste Body: " + respostaCreditoAPICaller	);
+		RespostaCreditoAPIResponse response = new RespostaCreditoAPIResponse(UUID.randomUUID().toString());
+		System.out.println(response);
+		return response;
+
+	}
 	@PostMapping("send")
 	RespostaCreditoAPICaller send(@RequestBody RespostaCreditoAPICaller respostaCreditoAPICaller) throws JsonProcessingException{
 
@@ -66,6 +73,8 @@ public class AppProducer {
 //	    	objectMapper.setDateFormat(df);
 	    	objectMapper.registerModule(new JavaTimeModule());
 	    	objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		    objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+
 //	    	respostaCreditoAPICaller.setDataHoraDecisao(LocalDateTime.now());
 	    	String carAsString = objectMapper.writeValueAsString(respostaCreditoAPICaller);
 	    	System.out.println(carAsString);
@@ -118,6 +127,42 @@ public class AppProducer {
 	        return "FAIL";
 	    }
 	}
+
+			@RequestMapping(value = "login", method = RequestMethod.POST)
+			public String login() {
+
+				String username = "felipe";
+				String password = "senha";
+				Integer TOKEN_EXPIRE_TIME = 60 * 2;
+
+//        User curentUser = new User().selectOne(new EntityWrapper<User>()
+//                .eq("username",username)
+//                .eq("password",password)
+//                .eq("del_flag",0));
+
+
+				JSONObject result = new JSONObject();
+
+					Jedis jedis = new Jedis("localhost", 6379);
+					String token = "sdfrw523r23rsrsd";
+					jedis.set(username, token);
+//					jedis.expire(username, TOKEN_EXPIRE_TIME);
+					jedis.expire(username, 5);
+					jedis.set(token, username);
+					jedis.expire(token, TOKEN_EXPIRE_TIME);
+					Long currentTime = System.currentTimeMillis();
+//					jedis.set(token + username, currentTime.toString());
+
+				System.out.println(jedis);
+				System.out.println(jedis.get(token));
+				System.out.println(jedis.get(username));
+
+					jedis.close();
+
+
+				return "OK";
+
+			}
 	////////////////////////////////////////////////////////////////////////////////////////////
 	@Bean
 	public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,

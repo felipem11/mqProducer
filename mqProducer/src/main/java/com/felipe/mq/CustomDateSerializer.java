@@ -1,4 +1,4 @@
-package com.example.mqspring;
+package com.felipe.mq;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
