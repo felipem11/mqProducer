@@ -17,12 +17,9 @@ import lombok.ToString;
 public class RespostaCreditoAPICaller {
 
 	private String idSimulacao;
-	private String codigoDecisao;
-	private String nomeDecisao;
-	private String documentosSolicitados;
-	
-	//@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime dataHoraDecisao;
-	private LocalDate validadeDecisao;
+
+	private String situacaoParecerCredito;
+	private LocalDateTime dataParecerCredito;
+	private LocalDate dataValidadeCredito;
 
 }

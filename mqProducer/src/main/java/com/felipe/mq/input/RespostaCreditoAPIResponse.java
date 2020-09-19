@@ -15,5 +15,5 @@ import java.time.LocalDateTime;
 public class RespostaCreditoAPIResponse {
 
 	private String idProposta;
-
+ 
 }
